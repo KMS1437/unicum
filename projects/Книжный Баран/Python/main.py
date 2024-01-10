@@ -1,5 +1,6 @@
 class Bookstore:
     def __init__(self):
+        # Инициализация меню и заказа
         self.menu = {
             "1": ('"Манифест Коммунистической Партии" Карл Маркс', 350),
             "2": ('"Двойной Латте на Кокосовом Ван Лав" Владимир Чижиков', 250),
@@ -26,13 +27,16 @@ class Bookstore:
         self.order = {}
 
     def welcome_message(self):
+        # Приветственное сообщение и вывод меню
         print("Добро пожаловать в КнижныйБаран!")
         print("Меню:")
         for key, value in self.menu.items():
             print(f"{key}. {value[0]} - {value[1]}₽")
 
     def process_order(self):
+        # Обработка заказа пользователя
         while True:
+            # Получение выбора пользователя
             item = input(
                 "Введите номер Книги, которую вы хотите купить (или 'Оплатить' для оплаты, 'Удалить' для удаления одного пункта): "
             )
@@ -48,7 +52,9 @@ class Bookstore:
                 print("Неверный номер книги. Пожалуйста, попробуйте еще раз.")
 
     def checkout(self):
+        # Обработка процесса оплаты
         while True:
+            # Получение выбора способа оплаты
             payment_method = input("Введите способ оплаты (1 - наличными, 2 - картой): ")
             if payment_method == "1":
                 self.pay_cash()
@@ -60,12 +66,14 @@ class Bookstore:
                 print("Введите 1 или 2")
 
     def pay_cash(self):
+        # Оплата наличными
         print("Оплатите при получении по адресу г. Кемерово, ул. Московский, 39")
         self.show_order_summary()
         print("Итого, вы набрали Книг на: {}₽".format(self.calculate_total()))
         print("Если возникли вопросы, обращайтесь по номеру 8 (800) 600-07-84")
 
     def pay_card(self):
+        # Оплата картой
         while True:
             card_number = input("Введите номер карты: ")
             if len(card_number) == 16 and card_number.isdigit():
@@ -92,6 +100,7 @@ class Bookstore:
         print("Если возникли вопросы, обращайтесь по номеру 8 (800) 600-07-84")
 
     def show_order_summary(self):
+        # Вывод сводки по заказу
         total = 0
         for item, count in self.order.items():
             name, price = self.menu[item]
@@ -99,6 +108,7 @@ class Bookstore:
             total += price * count
 
     def calculate_total(self):
+        # Вычисление общей суммы заказа
         total = 0
         for item, count in self.order.items():
             price = self.menu[item][1]
@@ -106,6 +116,7 @@ class Bookstore:
         return total
 
     def remove_item(self):
+        # Удаление товара из заказа
         item_to_remove = input("Введите номер книги, которую передумали брать: ")
         if item_to_remove in self.order:
             self.order[item_to_remove] -= 1
@@ -113,12 +124,14 @@ class Bookstore:
                 del self.order[item_to_remove]
 
     def add_item(self, item):
+        # Добавление товара в заказ
         if item in self.order:
             self.order[item] += 1
         else:
             self.order[item] = 1
 
 if __name__ == "__main__":
+    # Создание экземпляра книжного магазина и запуск основного процесса
     bookstore = Bookstore()
-bookstore.welcome_message()
-bookstore.process_order()
+    bookstore.welcome_message()
+    bookstore.process_order()
