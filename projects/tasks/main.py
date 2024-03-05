@@ -14,7 +14,7 @@ class TaskManagerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Менеджер задач")
-        self.root.geometry("800x400")  # Установите ширину окна на 800 пикселей
+        self.root.geometry("800x400")
 
         self.tasks = self.load_tasks_from_json()
 
