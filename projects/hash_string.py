@@ -13,10 +13,10 @@ def caesar_cipher(string, shift):
         else:
             encrypted_string += char
     return encrypted_string
-first = input("Введите строку: ")
-second = input("Введите строку: ")
+string1 = input("Введите строку: ")
+string2 = input("Введите строку: ")
 shift = int(input("Введите сдвиг: "))
-if compare(first, second, shift):
+if compare(string1, string2, shift):
     print("Строки совпадают")
 else:
     print("Строки не совпадают")
