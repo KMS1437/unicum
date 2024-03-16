@@ -36,7 +36,7 @@ CRM Система использует следующие зависимост�
 ## Авторы ✒️
 
 CRM Система была создана:
-[KMS1437]([github.com/KMS1437](https://github.com/KMS1437))](https://github.com/KMS1437)
+[KMS1437]([github.com/KMS1437](https://github.com/KMS1437)])(https://github.com/KMS1437)
 
 ## Вклад 📬
 
