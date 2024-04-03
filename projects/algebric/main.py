@@ -3,7 +3,7 @@ import telebot
 import re
 from sympy import sympify, expand
 
-bot = telebot.TeleBot('6456191950:AAHQW1ntnvDROXyc1u9keQEDSjWkxTxBaVE')
+bot = telebot.TeleBot('Максим тут нет токена')
 
 def replace_superscript(text):
     superscripts = {
