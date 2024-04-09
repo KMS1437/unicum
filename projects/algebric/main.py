@@ -3,7 +3,7 @@ import telebot
 import re
 from sympy import sympify, expand
 
-bot = telebot.TeleBot('Максим тут нет токена')
+bot = telebot.TeleBot("Максим тут нет токена))")
 
 def replace_superscript(text):
     superscripts = {
@@ -48,12 +48,17 @@ def handle_text(message):
     user_input = message.text
     if message.from_user.id == 5041299186:
         bot.send_message(message.chat.id, f"*⚡ Пошел лесом, {message.from_user.first_name}*", parse_mode="Markdown")
-    elif user_input == "🍌 Fucking so horny dungeon full master Semen":
-        bot.send_message(message.chat.id, text=f"*️⚜ Oh yes, {message.from_user.first_name}!*", parse_mode="Markdown")
+    elif user_input == "🏆 Миша испорченный до невозможности":
+        bot.send_message(message.chat.id, f"*️⚜ Однозначно, {message.from_user.first_name}!*", parse_mode="Markdown")
+    elif user_input == "💻 Как пользоваться этим ботом?":
+        bot.send_message(message.chat.id, f"*️⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)(a+3).*", parse_mode="Markdown")
+        bot.send_message(message.chat.id, "* Чтобы бот решил все, степень нужно указывать через ^, а умножение обозначается звездочкой, дробь в свою очередь обозначается как /, это же и деление. *", reply_markup=get_keyboard(), parse_mode="Markdown")
     elif message.text == "❓ Обновления проекта":
-        markup = types.InlineKeyboardMarkup()
-        button1 = types.InlineKeyboardButton("Канал по проекту", url='https://t.me/project_unicum')
+        markup = telebot.types.InlineKeyboardMarkup()
+        button1 = telebot.types.InlineKeyboardButton("Канал по проекту", url='https://t.me/project_unicum')
         markup.add(button1)
+        bot.send_message(message.chat.id, "Обновления проекта:", reply_markup=markup)
+
     else:
         try:
             result = sympify(user_input)
@@ -67,9 +72,10 @@ def handle_text(message):
 
 def get_keyboard():
     markup = types.ReplyKeyboardMarkup(row_width=2)
-    button1 = types.KeyboardButton("🍌 Fucking so horny dungeon full master Semen")
-    button2 = types.KeyboardButton("❓ Обновления проекта")
-    markup.add(button1, button2)
+    button1 = types.KeyboardButton("🏆 Миша испорченный до невозможности")
+    button2 = types.KeyboardButton("💻 Как пользоваться этим ботом?")
+    button3 = types.KeyboardButton("❓ Обновления проекта")
+    markup.add(button1, button2, button3)
     return markup
 
 if __name__ == "__main__":
