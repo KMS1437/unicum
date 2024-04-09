@@ -51,7 +51,7 @@ def handle_text(message):
     elif user_input == "🏆 Миша испорченный до невозможности":
         bot.send_message(message.chat.id, f"*️⚜ Однозначно, {message.from_user.first_name}!*", parse_mode="Markdown")
     elif user_input == "💻 Как пользоваться этим ботом?":
-        bot.send_message(message.chat.id, f"*️⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)(a+3).*", parse_mode="Markdown")
+        bot.send_message(message.chat.id, f"*️⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)*(a+3).*", parse_mode="Markdown")
         bot.send_message(message.chat.id, "* Чтобы бот решил все, степень нужно указывать через ^, а умножение обозначается звездочкой, дробь в свою очередь обозначается как /, это же и деление. *", reply_markup=get_keyboard(), parse_mode="Markdown")
     elif message.text == "❓ Обновления проекта":
         markup = telebot.types.InlineKeyboardMarkup()
