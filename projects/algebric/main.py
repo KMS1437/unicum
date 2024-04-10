@@ -5,7 +5,7 @@ import re
 from sympy import sympify, expand, solve
 import json
 
-bot = telebot.TeleBot("6456191950:AAHPV1PXP4tYo4mRfoAS69ljeTduEuYaPBE")
+bot = telebot.TeleBot("токен")
 with open('admins.json', 'r') as file:
     admins = json.load(file)
 
