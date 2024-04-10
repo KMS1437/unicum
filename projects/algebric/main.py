@@ -6,7 +6,7 @@ from sympy import sympify, expand, solve
 import json
 import os
 
-bot = telebot.TeleBot("6456191950:AAER5hYNhFDVFuWK2eP9XiJNxY3HeLGdEQI")
+bot = telebot.TeleBot("токен")
 admins = []
 
 if os.path.exists('admins.json'):
