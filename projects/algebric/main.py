@@ -2,10 +2,22 @@ from telebot import types
 import random
 import telebot
 import re
-from sympy import sympify, expand
+from sympy import sympify, expand, solve
+import json
 
-bot = telebot.TeleBot("токен")
+bot = telebot.TeleBot("6456191950:AAHPV1PXP4tYo4mRfoAS69ljeTduEuYaPBE")
+with open('admins.json', 'r') as file:
+    admins = json.load(file)
 
+@bot.message_handler(commands=['code'])
+def send_code(message):
+    user_id = message.from_user.id
+    if str(user_id) in admins:
+        with open('main.py', 'r') as file:
+            code = file.read()
+        bot.send_message(user_id, code)
+    else:
+        bot.send_message(user_id, "Вы не админ. У вас нет доступа к этой команде")
 
 def replace_superscript(text):
     superscripts = {
@@ -39,7 +51,7 @@ def handle_start(message):
 
 @bot.message_handler(commands=['sasat'])
 def handle_sosi(message):
-    bot.send_message(message.chat.id, f'*🍌Соси, {message.from_user.first_name}!*', parse_mode="Markdown")
+    bot.send_message(message.chat.id, f'*🍌Вот везде найдешь лазейку чтобы пососать, {message.from_user.first_name}!*', parse_mode="Markdown")
 
 
 @bot.message_handler(commands=['1000-7'])
@@ -67,14 +79,17 @@ def handle_text(message):
     elif user_input == "🏆 Миша испорченный до невозможности":
         bot.send_message(message.chat.id, f"*️⚜ Однозначно, {message.from_user.first_name}!*", parse_mode="Markdown")
     elif user_input == "💀 Насколько испорченный я?":
-        bot.send_message(message.chat.id, f"*⚜ {message.from_user.first_name}, вы испорченны на {chance}%*",
+        bot.send_message(message.chat.id, f"*⚜ {message.from_user.first_name}, вы испорчены на {chance}%*",
                          parse_mode="Markdown")
     elif user_input == "💻 Как пользоваться этим ботом?":
         bot.send_message(message.chat.id,
                          f"*⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)(a+3).*",
                          parse_mode="Markdown")
         bot.send_message(message.chat.id,
-                         "* Чтобы бот решил все, степень нужно указывать через ^, а умножение обозначается звездочкой, дробь в свою очередь обозначается как /, это же и деление. *",
+                         "*Чтобы бот решил все, степень нужно указывать через ^, а умножение обозначается звездочкой, дробь в свою очередь обозначается как /, это же и деление. *",
+                         parse_mode="Markdown")
+        bot.send_message(message.chat.id,
+                         "*Если вам нужно вычислить корень уравнения, то вам обязательно нужно указать левую и правую сторону уравнения через +. Если вам нужно упростить выражение, просто напишите его без двух сторон и =*",
                          reply_markup=get_keyboard(), parse_mode="Markdown")
     elif message.text == "❓ Обновления проекта":
         markup = telebot.types.InlineKeyboardMarkup()
@@ -84,10 +99,18 @@ def handle_text(message):
 
     else:
         try:
-            result = sympify(user_input)
-            expanded_result = expand(result)
-            result_str = replace_superscript(str(expanded_result).replace("**", "^"))
-            response = f"*⚜️ Результат:* {result_str}"
+            if re.match(r'^[a-zA-Z0-9+\-*/^().= ]+$', user_input):
+                if "=" in user_input:
+                    equation = sympify(user_input.split("=")[0]) - sympify(user_input.split("=")[1])
+                    root = solve(equation)
+                    response = f"*⚜️ Корень уравнения:* {root}"
+                else:
+                    result = sympify(user_input)
+                    expanded_result = expand(result)
+                    result_str = replace_superscript(str(expanded_result).replace("**", "^"))
+                    response = f"*⚜️ Результат:* {result_str}"
+            else:
+                response = "*🚫 Ошибка: Неверный формат выражения.*"
         except Exception as e:
             response = f"*🚫 Ошибка:* {e}"
         bot.send_message(message.chat.id, response, parse_mode="Markdown")
@@ -105,3 +128,4 @@ def get_keyboard():
 
 if __name__ == "__main__":
     bot.polling(none_stop=True)
+
