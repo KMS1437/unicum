@@ -6,12 +6,11 @@ from sympy import sympify, expand, solve
 import json
 import os
 
-bot = telebot.TeleBot("токен")
-admins = []
+bot = telebot.TeleBot("токен максика")
 
 if os.path.exists('admins.json'):
     with open('admins.json', 'r') as file:
-        admins = json.load(file)
+        admins = json.load(file)['admins']
 else:
     print("Файл admins.json не существует. Пожалуйста, убедитесь, что он создан и заполнен корректно.")
 
@@ -22,8 +21,9 @@ def send_code(message):
     print(f"ID пользователя {message.from_user.first_name}:", user_id)
     if user_id in admins:
         with open('main.py', 'r', encoding='utf-8') as file:
-            code = file.read()
-        bot.send_message(message.chat.id, code)
+            bot.send_message(message.chat.id, "*Код бота:*", parse_mode="Markdown")
+            bot.send_document(message.chat.id, file)
+
     else:
         bot.send_message(message.chat.id, "Вы не админ. У вас нет доступа к этой команде")
 
