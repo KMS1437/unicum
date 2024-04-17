@@ -2,22 +2,24 @@ from telebot import types
 import random
 import telebot
 import re
-from sympy import sympify, expand, solve
+from sympy import sympify, expand, solve, factorial
 import json
 import os
 
-bot = telebot.TeleBot("токен максика")
+bot = telebot.TeleBot("токен")
 
-if os.path.exists('admins.json'):
-    with open('admins.json', 'r') as file:
-        admins = json.load(file)['admins']
+if os.path.exists('persons.json'):
+    with open('persons.json', 'r') as file:
+        persons = json.load(file)
+        admins = persons['admins']
+        bans = persons['bans']
 else:
-    print("Файл admins.json не существует. Пожалуйста, убедитесь, что он создан и заполнен корректно.")
+    print("Файл persons.json не существует. Пожалуйста, убедитесь, что он создан и заполнен корректно.")
 
 
 @bot.message_handler(commands=['code'])
 def send_code(message):
-    user_id = str(message.from_user.id)
+    user_id = message.from_user.id
     print(f"ID пользователя {message.from_user.first_name}:", user_id)
     if user_id in admins:
         with open('main.py', 'r', encoding='utf-8') as file:
@@ -49,7 +51,6 @@ def replace_superscript(text):
     result = re.sub(pattern, replace_match, text)
     return result
 
-
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     bot.send_message(message.chat.id, "*👋 Привет! Я бот по алгебре и работаю на Дмитрия Борисовича. Чем могу помочь?*",
@@ -58,47 +59,32 @@ def handle_start(message):
                      reply_markup=get_keyboard())
 
 
-@bot.message_handler(commands=['sasat'])
-def handle_sosi(message):
-    bot.send_message(message.chat.id, f'*🍌Вот везде найдешь лазейку чтобы пососать, {message.from_user.first_name}!*', parse_mode="Markdown")
-
-
-@bot.message_handler(commands=['1000-7'])
-def handle_deadinside(message):
-    bot.send_message(message.chat.id, f'*🐷Малолетний дед инсайд {message.from_user.first_name}*', parse_mode="Markdown")
-
-
-@bot.message_handler(commands=['fuckingsemen'])
-def handle_semen(message):
-    bot.send_message(message.chat.id, f'*Oh yes {message.from_user.first_name}*', parse_mode="Markdown")
-
-@bot.message_handler(commands=['idinahuy'])
-def handle_idinahuy(message):
-    bot.send_message(message.chat.id, f'*😶‍🌫️ {message.from_user.first_name}, вы слишком много себе позволяете*', parse_mode="Markdown")
+@bot.message_handler(commands=['info'])
+def handle_info(message):
+    bot.send_message(message.chat.id,
+                     f'*Создатель:* @misakamozin\n*Дата первого создания:* 27 марта 2024\n*Описание проекта: * Проект был создан при поддержке учебного заведения "ЦДНИТТ при КузГТУ «УникУм»". Этот проект может помочь студентам сверить свой ответ по алгебре с ответом бота.',
+                     parse_mode="Markdown")
 
 
 @bot.message_handler(func=lambda message: True)
 def handle_text(message):
     user_input = message.text
     chance = random.randrange(1, 100)
-    if message.from_user.id == 5041299186:
+    if message.from_user.id in bans:
         bot.send_message(message.chat.id,
-                         f"*⚡ Ты больше не отличник, {message.from_user.first_name}.*",
-                         parse_mode="Markdown")
+                         f"⚡ Вам заблокирован доступ к боту, {message.from_user.first_name}.")
     elif user_input == "🏆 Миша испорченный до невозможности":
-        bot.send_message(message.chat.id, f"*️⚜ Однозначно, {message.from_user.first_name}!*", parse_mode="Markdown")
+        bot.send_message(message.chat.id, f"⚜ Однозначно, {message.from_user.first_name}!")
     elif user_input == "💀 Насколько испорченный я?":
-        bot.send_message(message.chat.id, f"*⚜ {message.from_user.first_name}, вы испорчены на {chance}%*", parse_mode="Markdown")
+        bot.send_message(message.chat.id, f"⚜ {message.from_user.first_name}, вы испорчены на {chance}%")
     elif user_input == "💻 Как пользоваться этим ботом?":
         bot.send_message(message.chat.id,
-                         f"*⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)(a+3).*",
-                         parse_mode="Markdown")
+                         f"⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)(a+3).")
         bot.send_message(message.chat.id,
-                         "*Чтобы бот решил все, степень нужно указывать через ^, а умножение обозначается звездочкой, дробь в свою очередь обозначается как /, это же и деление. *",
-                         parse_mode="Markdown")
+                         "Чтобы бот решил все, степень нужно указывать через ^, а умножение обозначается звездочкой, дробь в свою очередь обозначается как /, это же и деление.")
         bot.send_message(message.chat.id,
-                         "*Если вам нужно вычислить корень уравнения, то вам обязательно нужно указать левую и правую сторону уравнения через +. Если вам нужно упростить выражение, просто напишите его без двух сторон и =*",
-                         reply_markup=get_keyboard(), parse_mode="Markdown")
+                         "Если вам нужно вычислить корень уравнения, то вам обязательно нужно указать левую и правую сторону уравнения через +. Если вам нужно упростить выражение, просто напишите его без двух сторон и =",
+                         reply_markup=get_keyboard())
     elif user_input == "❓ Обновления проекта":
         markup = telebot.types.InlineKeyboardMarkup()
         button1 = telebot.types.InlineKeyboardButton("Канал по проекту", url='https://t.me/project_unicum')
@@ -110,17 +96,22 @@ def handle_text(message):
                 if "=" in user_input:
                     equation = sympify(user_input.split("=")[0]) - sympify(user_input.split("=")[1])
                     root = solve(equation)
-                    response = f"*⚜️ Корень уравнения:* {root}"
+                    response = f"⚜️ Корень уравнения: {root}"
                 else:
                     result = sympify(user_input)
                     expanded_result = expand(result)
                     result_str = replace_superscript(str(expanded_result).replace("**", "^"))
-                    response = f"*⚜️ Результат:* {result_str}"
+                    response = f"⚜️ Результат: {result_str}"
+            elif "!" in user_input:
+                num = int(user_input.split("!")[0])
+                fact = factorial(num)
+                response = f"⚜️ Факториал числа {num}: {fact}"
             else:
-                response = "*🚫 Ошибка: Неверный формат выражения.*"
+                response = "🚫 Ошибка: Неверный формат выражения."
         except Exception as e:
-            response = f"*🚫 Ошибка:* {e}"
-        bot.send_message(message.chat.id, response, parse_mode="Markdown")
+            response = f"🚫 Ошибка: {e}"
+        response = response.replace("*", "")
+        bot.send_message(message.chat.id, response)
 
 
 def get_keyboard():
