@@ -6,7 +6,7 @@ from sympy import sympify, expand, solve, factorial
 import json
 import os
 
-bot = telebot.TeleBot("токен")
+bot = telebot.TeleBot("TOKEN")
 
 if os.path.exists('persons.json'):
     with open('persons.json', 'r') as file:
@@ -62,24 +62,24 @@ def handle_start(message):
 @bot.message_handler(commands=['info'])
 def handle_info(message):
     bot.send_message(message.chat.id,
-                     f'*Создатель:* @misakamozin\n*Дата первого создания:* 27 марта 2024\n*Описание проекта: * Проект был создан при поддержке учебного заведения "ЦДНИТТ при КузГТУ «УникУм»". Этот проект может помочь студентам сверить свой ответ по алгебре с ответом бота.',
+                     f'*Создатель:* @misakamozin\n*Дата первого создания:* 27 марта 2024\n*Описание проекта: * Проект был создан при поддержке учебного заведения "ЦДНИТТ при КузГТУ «УникУм»". Этот проект может помочь студентам сверить свой ответ по алгебре с ответом бота.\n*Используемые библиотеки: * telebot, random, re, sympy, json, os',
                      parse_mode="Markdown")
 
 
 @bot.message_handler(func=lambda message: True)
 def handle_text(message):
     user_input = message.text
-    chance = random.randrange(1, 100)
     if message.from_user.id in bans:
         bot.send_message(message.chat.id,
                          f"⚡ Вам заблокирован доступ к боту, {message.from_user.first_name}.")
     elif user_input == "🏆 Миша испорченный до невозможности":
         bot.send_message(message.chat.id, f"⚜ Однозначно, {message.from_user.first_name}!")
-    elif user_input == "💀 Насколько испорченный я?":
-        bot.send_message(message.chat.id, f"⚜ {message.from_user.first_name}, вы испорчены на {chance}%")
+    elif user_input == "💀 Насколько ты Паскарь?":
+        chance = random.randrange(1, 100)
+        bot.send_message(message.chat.id, f"⚜ {message.from_user.first_name}, вы Паскарь на {chance}%")
     elif user_input == "💻 Как пользоваться этим ботом?":
         bot.send_message(message.chat.id,
-                         f"⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)(a+3).")
+                         f"⚜ {message.from_user.first_name}, напишите любой многочлен или алгеброическое выражение, к примеру (a-3)*(a+3).")
         bot.send_message(message.chat.id,
                          "Чтобы бот решил все, степень нужно указывать через ^, а умножение обозначается звездочкой, дробь в свою очередь обозначается как /, это же и деление.")
         bot.send_message(message.chat.id,
@@ -96,7 +96,7 @@ def handle_text(message):
                 if "=" in user_input:
                     equation = sympify(user_input.split("=")[0]) - sympify(user_input.split("=")[1])
                     root = solve(equation)
-                    response = f"⚜️ Корень уравнения: {root}"
+                    response = f"⚜️ Корень уравнения: {root[0]}"
                 else:
                     result = sympify(user_input)
                     expanded_result = expand(result)
@@ -118,7 +118,7 @@ def get_keyboard():
     markup = types.ReplyKeyboardMarkup(row_width=2)
     button1 = types.KeyboardButton("🏆 Миша испорченный до невозможности")
     button2 = types.KeyboardButton("💻 Как пользоваться этим ботом?")
-    button3 = types.KeyboardButton("💀 Насколько испорченный я?")
+    button3 = types.KeyboardButton("💀 Насколько ты Паскарь?")
     button4 = types.KeyboardButton("❓ Обновления проекта")
     markup.add(button1, button2, button3, button4)
     return markup
