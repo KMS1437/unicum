@@ -1,3 +1,5 @@
+#Алгебра
+
 from telebot import types
 import random
 import telebot
