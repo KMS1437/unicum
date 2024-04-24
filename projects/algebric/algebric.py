@@ -1,14 +1,14 @@
-#Физика
+#Алгебра
 
 from telebot import types
 import random
 import telebot
 import re
-import sympy
+from sympy import sympify, expand, solve, factorial
 import json
 import os
 
-bot = telebot.TeleBot("TOKEN")
+bot = telebot.TeleBot("6456191950:AAER5hYNhFDVFuWK2eP9XiJNxY3HeLGdEQI")
 
 if os.path.exists('persons.json'):
     with open('persons.json', 'r') as file:
@@ -24,7 +24,7 @@ def send_code(message):
     user_id = message.from_user.id
     print(f"ID пользователя {message.from_user.first_name}:", user_id)
     if user_id in admins:
-        with open('main.py', 'r', encoding='utf-8') as file:
+        with open('algebric.py', 'r', encoding='utf-8') as file:
             bot.send_message(message.chat.id, "*Код бота:*", parse_mode="Markdown")
             bot.send_document(message.chat.id, file)
 
@@ -55,16 +55,16 @@ def replace_superscript(text):
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    bot.send_message(message.chat.id, "*👋 Привет! Я бот по физике и работаю на Дмитрия Борисовича. Чем могу помочь?*",
+    bot.send_message(message.chat.id, "*👋 Привет! Я бот по алгебре и работаю на Дмитрия Борисовича. Чем могу помочь?*",
                      parse_mode="Markdown")
-    bot.send_message(message.chat.id, "Нажмите на кнопку или введите задачу:",
+    bot.send_message(message.chat.id, "Нажмите на кнопку или введите алгебраическое выражение:",
                      reply_markup=get_keyboard())
 
 
 @bot.message_handler(commands=['info'])
 def handle_info(message):
     bot.send_message(message.chat.id,
-                     f'*Создатель:* @misakamozin\n*Дата первого создания:* 27 марта 2024\n*Описание проекта: * Проект был создан при поддержке учебного заведения "ЦДНИТТ при КузГТУ «УникУм»". Этот проект может помочь студентам сверить свой ответ по алгебре или физике с ответом бота.\n*Используемые библиотеки: * telebot, random, re, sympy, json, os',
+                     f'*Создатель:* @misakamozin\n*Дата первого создания:* 27 марта 2024\n*Описание проекта: * Проект был создан при поддержке учебного заведения "ЦДНИТТ при КузГТУ «УникУм»". Этот проект может помочь студентам сверить свой ответ по алгебре с ответом бота.\n*Используемые библиотеки: * telebot, random, re, sympy, json, os',
                      parse_mode="Markdown")
 
 
@@ -94,15 +94,30 @@ def handle_text(message):
         bot.send_message(message.chat.id, "Обновления проекта:", reply_markup=markup)
     else:
         try:
-            if re.match(r'^[a-zA-Z0-9+\-*/^().= ]+$', user_input):
+            if re.match(r'^[a-zA-Z0-9+\-*/^().=√ ]+$', user_input):
                 if "=" in user_input:
-                    physics_result = perform_physics_calculation(user_input)
-                    response = f"⚜️ Результат физического вычисления: {physics_result}"
+                    if "√" in user_input:
+                        equation = sympify(user_input.replace("^", "**").split("=")[0]) - sympify(
+                            user_input.replace("^", "**").split("=")[1])
+                    else:
+                        equation = sympify(user_input.split("=")[0]) - sympify(user_input.split("=")[1])
+                    roots = solve(equation)
+                    if len(roots) > 1:
+                        response = f"⚜️ Корни уравнения: {', '.join([str(root) for root in roots])}"
+                    else:
+                        response = f"⚜️ Корень уравнения: {roots[0]}"
                 else:
-                    result = sympy.sympify(user_input)
-                    expanded_result = sympy.expand(result)
+                    if "√" in user_input:
+                        result = sympify(user_input.replace("^", "**"))
+                    else:
+                        result = sympify(user_input)
+                    expanded_result = expand(result)
                     result_str = replace_superscript(str(expanded_result).replace("**", "^"))
                     response = f"⚜️ Результат: {result_str}"
+            elif "!" in user_input:
+                num = int(user_input.split("!")[0])
+                fact = factorial(num)
+                response = f"⚜️ Факториал числа {num}: {fact}"
             else:
                 response = "🚫 Ошибка: Неверный формат выражения."
         except Exception as e:
