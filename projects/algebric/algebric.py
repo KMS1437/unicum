@@ -8,7 +8,7 @@ from sympy import sympify, expand, solve, factorial
 import json
 import os
 
-bot = telebot.TeleBot("6456191950:AAER5hYNhFDVFuWK2eP9XiJNxY3HeLGdEQI")
+bot = telebot.TeleBot("TOKEN")
 
 if os.path.exists('persons.json'):
     with open('persons.json', 'r') as file:
